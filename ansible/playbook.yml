@@ -1,0 +1,23 @@
+---
+- name: Post-Deployment Security Hardening on OpenShift Cluster
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Create security policies
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: rbac.authorization.k8s.io/v1
+          kind: ClusterRoleBinding
+          metadata:
+            name: view-binding
+          subjects:
+          - kind: Group
+            name: system:authenticated
+            apiGroup: rbac.authorization.k8s.io
+          roleRef:
+            kind: ClusterRole
+            name: view
+            apiGroup: rbac.authorization.k8s.io
+
